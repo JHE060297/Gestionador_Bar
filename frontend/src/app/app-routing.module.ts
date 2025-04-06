@@ -60,8 +60,8 @@ const routes: Routes = [
                 data: { roles: ['admin', 'cajero'] }
             },
             {
-                path: 'branches',
-                loadChildren: () => import('./modules/branches/branches.module').then(m => m.BranchesModule),
+                path: 'sucursales',
+                loadChildren: () => import('./modules/sucursales/sucursales.module').then(m => m.SucursalesModule),
                 data: { roles: ['admin'] }
             }
         ]

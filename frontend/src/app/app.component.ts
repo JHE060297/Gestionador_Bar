@@ -11,5 +11,5 @@ import { Router, RouterOutlet } from '@angular/router';
   styles: []
 })
 export class AppComponent {
-  title = 'Restaurant Management System';
+  title = 'Bar Management System';
 }

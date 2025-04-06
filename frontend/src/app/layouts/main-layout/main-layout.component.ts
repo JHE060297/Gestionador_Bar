@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../core/authentication/auth.service';
 import { Usuario } from '../../core/models/user.model';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators'
 import { sharedImports } from '../../shared/shared.imports';
 
 interface MenuOption {
@@ -22,6 +23,8 @@ interface MenuOption {
 export class MainLayoutComponent implements OnInit {
     currentUser$: Observable<Usuario | null>;
     isSidenavOpen = true;
+    showNavbar = true;
+    isLoginPage = false;
 
     menuOptions: MenuOption[] = [
         { name: 'Dashboard', route: '/dashboard', icon: 'dashboard', roles: ['admin', 'cajero', 'mesero'] },
@@ -39,9 +42,20 @@ export class MainLayoutComponent implements OnInit {
         private router: Router
     ) {
         this.currentUser$ = this.authService.currentUser$;
+
+        this.router.events.pipe(
+            filter(event => event instanceof NavigationEnd)
+        ).subscribe((event: any) => {
+            // Verificar si la ruta actual es la página de login o access-denied
+            this.isLoginPage = event.url === '/login' || event.url === '/access-denied' || event.url === '/not-found';
+            this.showNavbar = !this.isLoginPage;
+        })
     }
 
     ngOnInit(): void {
+        // Verificar la ruta inicial
+        this.isLoginPage = this.router.url === '/login' || this.router.url === '/access-denied' || this.router.url === '/not-found';
+        this.showNavbar = !this.isLoginPage;
     }
 
     toggleSidenav(): void {

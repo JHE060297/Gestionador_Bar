@@ -2,16 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { BranchesService } from '../../../core/services/branches.service';
+import { SucursalService } from '../../../core/services/sucursales.service';
 import { OrdersService } from '../../../core/services/orders.service';
 import { AuthService } from '../../../core/authentication/auth.service';
-import { Mesa } from '../../../core/models/user.model';
+import { Mesa } from '../../../core/models/orders.model';
 import { Pedido } from '../../../core/models/orders.model';
 import { forkJoin, of } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 
 @Component({
     selector: 'app-table-detail',
+    imports: [sharedImports],
     templateUrl: './table-detail.component.html',
     styleUrls: ['./table-detail.component.scss']
 })
@@ -29,7 +30,7 @@ export class TableDetailComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private branchesService: BranchesService,
+        private sucursalesService: SucursalService,
         private ordersService: OrdersService,
         public authService: AuthService,
         private snackBar: MatSnackBar,
@@ -58,7 +59,7 @@ export class TableDetailComponent implements OnInit {
 
         // Cargar información de la mesa y sus pedidos en paralelo
         forkJoin({
-            table: this.branchesService.getTableById(this.tableId).pipe(
+            table: this.sucursalesService.getTableById(this.tableId).pipe(
                 catchError(error => {
                     this.error = 'Error al cargar los datos de la mesa';
                     console.error('Error loading table', error);
@@ -204,7 +205,7 @@ export class TableDetailComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.branchesService.freeTable(this.tableId)
+                this.sucursalesService.freeTable(this.tableId)
                     .subscribe(
                         () => {
                             if (this.table) {
@@ -229,9 +230,11 @@ export class TableDetailComponent implements OnInit {
 // Dialog Component for Confirmation
 import { Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { sharedImports } from '../../../shared/shared.imports';
 
 @Component({
     selector: 'app-confirm-dialog',
+    imports: [sharedImports],
     template: `
     <h2 mat-dialog-title>{{ data.title }}</h2>
     <mat-dialog-content>{{ data.message }}</mat-dialog-content>

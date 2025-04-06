@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { BranchesService } from '../../../core/services/branches.service';
+import { SucursalService } from '../../../core/services/sucursales.service';
 import { UserService } from '../../../core/services/user.service';
 import { AuthService } from '../../../core/authentication/auth.service';
-import { Mesa, Sucursal } from '../../../core/models/user.model';
+import { Sucursal } from '../../../core/models/user.model';
+import { Mesa } from '../../../core/models/orders.model';
 import { Pedido } from '../../../core/models/orders.model';
 import { OrdersService } from '../../../core/services/orders.service';
 import { Router } from '@angular/router';
@@ -12,6 +13,8 @@ import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 
 @Component({
+    standalone: true,
+    imports: [sharedImports],
     selector: 'app-tables-view',
     templateUrl: './tables-view.component.html',
     styleUrls: ['./tables-view.component.scss']
@@ -31,9 +34,9 @@ export class TablesViewComponent implements OnInit {
     showInactiveTables = false;
 
     constructor(
-        private branchesService: BranchesService,
+        private sucursalesServices: SucursalService,
         private ordersService: OrdersService,
-        private authService: AuthService,
+        public authService: AuthService,
         private userService: UserService,
         private snackBar: MatSnackBar,
         private dialog: MatDialog,
@@ -60,7 +63,7 @@ export class TablesViewComponent implements OnInit {
 
         // Observable para sucursales (solo para admin)
         const branches$ = this.isAdmin
-            ? this.branchesService.getBranches().pipe(
+            ? this.sucursalesServices.getBranches().pipe(
                 catchError(() => {
                     this.error = 'Error al cargar sucursales';
                     return of([]);
@@ -81,7 +84,7 @@ export class TablesViewComponent implements OnInit {
             filters.is_active = true;
         }
 
-        const tables$ = this.branchesService.getTables(filters).pipe(
+        const tables$ = this.sucursalesServices.getTables(filters).pipe(
             catchError(() => {
                 this.error = 'Error al cargar mesas';
                 return of([]);
@@ -211,7 +214,7 @@ export class TablesViewComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.branchesService.freeTable(table.id_mesa)
+                this.sucursalesServices.freeTable(table.id_mesa)
                     .subscribe(
                         () => {
                             // Actualizar el estado de la mesa en la lista
@@ -262,11 +265,13 @@ export class TablesViewComponent implements OnInit {
 }
 
 // Dialog Component for Confirmation
-import { Component, Inject } from '@angular/core';
+import { Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { sharedImports } from '../../../shared/shared.imports';
 
 @Component({
     selector: 'app-confirm-dialog',
+    imports: [sharedImports],
     template: `
     <h2 mat-dialog-title>{{ data.title }}</h2>
     <mat-dialog-content>{{ data.message }}</mat-dialog-content>

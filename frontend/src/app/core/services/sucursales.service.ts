@@ -2,35 +2,36 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Sucursal, Mesa } from '../models/user.model';
+import { Sucursal } from '../models/user.model';
+import { Mesa } from '../models/orders.model';
 
 @Injectable({
     providedIn: 'root'
 })
-export class BranchesService {
-    private apiUrl = `${environment.apiUrl}branches/`;
+export class SucursalService {
+    private apiUrl = `${environment.apiUrl}sucursales/`;
 
     constructor(private http: HttpClient) { }
 
     // Sucursales
     getBranches(): Observable<Sucursal[]> {
-        return this.http.get<Sucursal[]>(`${this.apiUrl}branches/`);
+        return this.http.get<Sucursal[]>(`${this.apiUrl}sucursales/`);
     }
 
     getBranchById(id: number): Observable<Sucursal> {
-        return this.http.get<Sucursal>(`${this.apiUrl}branches/${id}/`);
+        return this.http.get<Sucursal>(`${this.apiUrl}sucursales/${id}/`);
     }
 
     createBranch(branch: Sucursal): Observable<Sucursal> {
-        return this.http.post<Sucursal>(`${this.apiUrl}branches/`, branch);
+        return this.http.post<Sucursal>(`${this.apiUrl}sucursales/`, branch);
     }
 
     updateBranch(id: number, branch: Partial<Sucursal>): Observable<Sucursal> {
-        return this.http.patch<Sucursal>(`${this.apiUrl}branches/${id}/`, branch);
+        return this.http.patch<Sucursal>(`${this.apiUrl}sucursales/${id}/`, branch);
     }
 
     deleteBranch(id: number): Observable<any> {
-        return this.http.delete(`${this.apiUrl}branches/${id}/`);
+        return this.http.delete(`${this.apiUrl}sucursales/${id}/`);
     }
 
     // Mesas

@@ -11,11 +11,12 @@ import { sharedImports } from '../../shared/shared.imports';
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss']
 })
+
 export class LoginComponent implements OnInit {
     loginForm: FormGroup;
     isLoading = false;
     hidePassword = true;
-    returnUrl: string = '/';
+    returnUrl: string = '/dashboard';
 
     constructor(
         private formBuilder: FormBuilder,
@@ -32,13 +33,13 @@ export class LoginComponent implements OnInit {
 
         // Verificar si ya está autenticado
         if (this.authService.isAuthenticated()) {
-            this.router.navigate(['/']);
+            this.router.navigate(['/dashboard']);
         }
     }
 
     ngOnInit(): void {
         // Obtener la URL de retorno de los query params o usar la raíz por defecto
-        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
     }
 
     onSubmit(): void {
@@ -52,7 +53,11 @@ export class LoginComponent implements OnInit {
         this.authService.login(credentials).subscribe(
             success => {
                 if (success) {
-                    this.router.navigateByUrl(this.returnUrl);
+                    this.snackBar.open('Inicio de sesión exitoso', 'Cerrar', {
+                        duration: 3000,
+                        horizontalPosition: 'center',
+                        verticalPosition: 'bottom'
+                    });
                 } else {
                     this.snackBar.open('Credenciales incorrectas', 'Cerrar', {
                         duration: 3000,

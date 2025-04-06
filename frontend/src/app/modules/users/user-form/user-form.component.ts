@@ -3,13 +3,15 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../../core/services/user.service';
-import { BranchesService } from '../../../core/services/branches.service';
+import { SucursalService } from '../../../core/services/sucursales.service';
 import { Usuario, Rol, Sucursal } from '../../../core/models/user.model';
 import { forkJoin, of } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
+import { sharedImports } from '../../../shared/shared.imports';
 
 @Component({
-    standalone: false,
+    standalone: true,
+    imports: [sharedImports],
     selector: 'app-user-form',
     templateUrl: './user-form.component.html',
     styleUrls: ['./user-form.component.scss']
@@ -28,7 +30,7 @@ export class UserFormComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private userService: UserService,
-        private branchesService: BranchesService,
+        private sucursalesService: SucursalService,
         private route: ActivatedRoute,
         private router: Router,
         private snackBar: MatSnackBar
@@ -64,7 +66,7 @@ export class UserFormComponent implements OnInit {
         // Cargar roles y sucursales en paralelo
         forkJoin({
             roles: this.userService.getRoles().pipe(catchError(() => of([]))),
-            branches: this.branchesService.getBranches().pipe(catchError(() => of([]))),
+            branches: this.sucursalesService.getBranches().pipe(catchError(() => of([]))),
             user: this.isNewUser ? of(null) : this.userService.getUserById(this.userId as number).pipe(catchError(() => of(null)))
         })
             .pipe(

@@ -37,12 +37,13 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    UsersListComponent,
-    UserFormComponent,
-    UserDetailComponent
+
   ],
   imports: [
     CommonModule,
+    UsersListComponent,
+    UserFormComponent,
+    UserDetailComponent,
     SharedModule,
     RouterModule.forChild(routes)
   ],

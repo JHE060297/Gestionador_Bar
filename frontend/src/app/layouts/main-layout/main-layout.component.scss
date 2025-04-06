@@ -22,6 +22,11 @@
     margin-top: 64px; // altura del toolbar
 }
 
+// Contenedor sin navbar para páginas como login
+.sidenav-container.login-container {
+    margin-top: 0; // Sin margen cuando no hay toolbar
+}
+
 .app-sidenav {
     width: 250px;
     box-shadow: 3px 0 6px rgba(0, 0, 0, .1);
@@ -30,6 +35,13 @@
 .main-content {
     padding: 20px;
     background-color: #f5f5f5;
+}
+
+// Contenido sin navbar
+.main-content.without-navbar {
+    padding: 0; // Sin padding cuando no hay navbar
+    background-color: transparent; // Fondo transparente para páginas como login
+    height: 100vh; // Altura completa de la ventana
 }
 
 .content-wrapper {
@@ -88,12 +100,20 @@
         margin-top: 56px; // altura del toolbar en móvil
     }
 
+    .sidenav-container.login-container {
+        margin-top: 0; // Sin margen cuando no hay toolbar
+    }
+
     .app-sidenav {
         width: 200px;
     }
 
     .main-content {
         padding: 10px;
+    }
+
+    .main-content.without-navbar {
+        padding: 0;
     }
 
     .username {

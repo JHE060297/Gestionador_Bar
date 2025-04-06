@@ -6,7 +6,7 @@
                 <span [ngClass]="getTableStatusClass(table.estado)">
                     {{ getTableStatusLabel(table.estado) }}
                 </span>
-                <span *ngIf="table.sucursal_nombre"> - {{ table.sucursal_nombre }}</span>
+                <span *ngIf="table.nombre_sucursal"> - {{ table.nombre_sucursal }}</span>
             </p>
         </div>
         <div class="header-actions">

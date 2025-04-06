@@ -1,6 +1,6 @@
 <div class="app-container" [class.is-mobile]="false">
-    <!-- Barra superior -->
-    <mat-toolbar color="primary" class="app-toolbar">
+    <!-- Barra superior - Solo mostrar si showNavbar es true -->
+    <mat-toolbar color="primary" class="app-toolbar" *ngIf="showNavbar">
         <button mat-icon-button (click)="toggleSidenav()">
             <mat-icon>menu</mat-icon>
         </button>
@@ -38,10 +38,10 @@
     </mat-toolbar>
 
     <!-- Contenedor del sidenav y contenido principal -->
-    <mat-sidenav-container class="sidenav-container">
-        <!-- Menú lateral -->
-        <mat-sidenav #sidenav [mode]="'side'" [opened]="isSidenavOpen" class="app-sidenav" [fixedInViewport]="false">
-
+    <mat-sidenav-container class="sidenav-container" [class.login-container]="!showNavbar">
+        <!-- Menú lateral - Solo mostrar si showNavbar es true -->
+        <mat-sidenav #sidenav [mode]="'side'" [opened]="isSidenavOpen && showNavbar" class="app-sidenav"
+            [fixedInViewport]="false" *ngIf="showNavbar">
             <mat-nav-list>
                 <ng-container *ngFor="let option of menuOptions">
                     <a mat-list-item [routerLink]="option.route" routerLinkActive="active-link"
@@ -53,8 +53,8 @@
             </mat-nav-list>
         </mat-sidenav>
 
-        <!-- Contenido principal -->
-        <mat-sidenav-content class="main-content">
+        <!-- Contenido principal - Ajustar margen superior según si se muestra el navbar -->
+        <mat-sidenav-content class="main-content" [ngClass]="{'without-navbar': !showNavbar}">
             <div class="content-wrapper">
                 <router-outlet></router-outlet>
             </div>

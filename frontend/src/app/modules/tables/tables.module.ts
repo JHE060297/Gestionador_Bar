@@ -1,3 +1,4 @@
+
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
@@ -24,12 +25,13 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    TablesViewComponent,
-    TableDetailComponent
+
   ],
   imports: [
     CommonModule,
     SharedModule,
+    TablesViewComponent,
+    TableDetailComponent,
     RouterModule.forChild(routes)
   ],
   exports: [RouterModule]

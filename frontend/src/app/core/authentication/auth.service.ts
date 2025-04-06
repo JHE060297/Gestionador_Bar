@@ -63,6 +63,8 @@ export class AuthService {
 
                         // Actualizar BehaviorSubject
                         this.currentUserSubject.next(user);
+
+                        this.router.navigate(['/dashboard'])
                     } catch (error) {
                         console.error('Error al decodificar token', error);
                     }
@@ -123,7 +125,7 @@ export class AuthService {
         const user = this.currentUserSubject.value;
         if (!user) return false;
 
-        // Si el usuario es admin, tiene acceso a todo
+        // Si el usuario es admin, tiene acceso a todo 
         if (user.is_staff) return true;
 
         // Comprobar el rol específico

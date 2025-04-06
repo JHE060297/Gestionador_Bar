@@ -3,13 +3,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { UserService } from '../../../core/services/user.service';
-import { BranchesService } from '../../../core/services/branches.service';
+import { SucursalService } from '../../../core/services/sucursales.service';
 import { Usuario, Rol, Sucursal } from '../../../core/models/user.model';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 @Component({
     selector: 'app-user-detail',
+    imports: [sharedImports],
     templateUrl: './user-detail.component.html',
     styleUrls: ['./user-detail.component.scss']
 })
@@ -25,7 +26,7 @@ export class UserDetailComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private userService: UserService,
-        private branchesService: BranchesService,
+        private sucursalesService: SucursalService,
         private snackBar: MatSnackBar,
         private dialog: MatDialog
     ) {
@@ -76,7 +77,7 @@ export class UserDetailComponent implements OnInit {
             });
 
         // Cargar sucursales
-        this.branchesService.getBranches()
+        this.sucursalesService.getBranches()
             .pipe(
                 catchError(() => of([]))
             )
@@ -163,9 +164,11 @@ export class UserDetailComponent implements OnInit {
 // Dialog Component for Confirmation
 import { Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { sharedImports } from '../../../shared/shared.imports';
 
 @Component({
     selector: 'app-confirm-dialog',
+    imports: [sharedImports],
     template: `
     <h2 mat-dialog-title>{{ data.title }}</h2>
     <mat-dialog-content>{{ data.message }}</mat-dialog-content>
