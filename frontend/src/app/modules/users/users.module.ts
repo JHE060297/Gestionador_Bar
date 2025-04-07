@@ -13,25 +13,25 @@ const routes: Routes = [
     path: '',
     component: UsersListComponent,
     canActivate: [authGuard, roleGuard],
-    data: { roles: ['admin'] }
+    data: { roles: ['administrador'] }
   },
   {
     path: 'new',
     component: UserFormComponent,
     canActivate: [authGuard, roleGuard],
-    data: { roles: ['admin'] }
+    data: { roles: ['administrador'] }
   },
   {
     path: 'edit/:id',
     component: UserFormComponent,
     canActivate: [authGuard, roleGuard],
-    data: { roles: ['admin'] }
+    data: { roles: ['administrador'] }
   },
   {
     path: ':id',
     component: UserDetailComponent,
     canActivate: [authGuard, roleGuard],
-    data: { roles: ['admin'] }
+    data: { roles: ['administrador'] }
   }
 ];
 

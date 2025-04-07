@@ -24,7 +24,7 @@ class UserManager(BaseUserManager):
 
         from .models import Rol
 
-        rol_admin, _ = Rol.objects.get_or_create(nombre="admin")
+        rol_admin, _ = Rol.objects.get_or_create(nombre="Administrador")
         extra_fields["id_rol"] = rol_admin
 
         from apps.sucursales.models import Sucursal

@@ -12,7 +12,7 @@ const routes: Routes = [
     component: PlaceholderComponent,
     canActivate: [authGuard, roleGuard],
     data: {
-      roles: ['admin', 'cajero'],
+      roles: ['administrador', 'cajero'],
       title: 'Gestión de Pagos',
       message: 'El módulo de pagos estará disponible próximamente. Aquí podrás procesar los pagos de los pedidos.'
     }

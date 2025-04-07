@@ -13,13 +13,13 @@ const routes: Routes = [
     path: '',
     component: TablesViewComponent,
     canActivate: [authGuard],
-    data: { roles: ['admin', 'cajero', 'mesero'] }
+    data: { roles: ['administrador', 'cajero', 'mesero'] }
   },
   {
     path: ':id',
     component: TableDetailComponent,
     canActivate: [authGuard],
-    data: { roles: ['admin', 'cajero', 'mesero'] }
+    data: { roles: ['administrador', 'cajero', 'mesero'] }
   }
 ];
 

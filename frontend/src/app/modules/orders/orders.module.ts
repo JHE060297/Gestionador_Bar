@@ -12,7 +12,7 @@ const routes: Routes = [
     component: PlaceholderComponent,
     canActivate: [authGuard],
     data: {
-      roles: ['admin', 'cajero', 'mesero'],
+      roles: ['administrador', 'cajero', 'mesero'],
       title: 'Gestión de Pedidos',
       message: 'El módulo de pedidos estará disponible próximamente. Aquí podrás crear y gestionar pedidos.'
     }

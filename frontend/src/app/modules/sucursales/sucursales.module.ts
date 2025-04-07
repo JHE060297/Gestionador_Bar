@@ -6,46 +6,46 @@ import { SucursalListComponent } from './sucursal-list/sucursal-list.component';
 import { SucursalFormComponent } from './sucursal-form/sucursal-form.component';
 import { MesasListComponent } from '../tables/tables-list/tables-list.component';
 import { TableFormComponent } from '../tables/table-form/table-form.component';
-import { AuthGuard } from '../../core/guards/auth.guard';
-import { RoleGuard } from '../../core/guards/role.guard';
+import { authGuard } from '../../core/guards/auth.guard';
+import { roleGuard } from '../../core/guards/role.guard';
 
 
 const routes: Routes = [
     {
         path: '',
         component: SucursalListComponent,
-        canActivate: [AuthGuard, RoleGuard],
-        data: { roles: ['admin'] }
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['administrador'] }
     },
     {
         path: 'new',
         component: SucursalFormComponent,
-        canActivate: [AuthGuard, RoleGuard],
-        data: { roles: ['admin'] }
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['administrador'] }
     },
     {
         path: 'edit/:id',
         component: SucursalFormComponent,
-        canActivate: [AuthGuard, RoleGuard],
-        data: { roles: ['admin'] }
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['administrador'] }
     },
     {
         path: ':id/tables',
         component: MesasListComponent,
-        canActivate: [AuthGuard],
-        data: { roles: ['admin', 'cajero', 'mesero'] }
+        canActivate: [authGuard],
+        data: { roles: ['administrador', 'cajero', 'mesero'] }
     },
     {
         path: ':id/tables/new',
         component: TableFormComponent,
-        canActivate: [AuthGuard, RoleGuard],
-        data: { roles: ['admin'] }
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['administrador'] }
     },
     {
         path: ':id/tables/edit/:tableId',
         component: TableFormComponent,
-        canActivate: [AuthGuard, RoleGuard],
-        data: { roles: ['admin'] }
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['administrador'] }
     }
 ];
 

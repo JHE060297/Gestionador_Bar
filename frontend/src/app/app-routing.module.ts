@@ -4,7 +4,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { AccessDeniedComponent } from './pages/access-denied/access-denied.component';
-import { AuthGuard } from './core/guards/auth.guard';
+import { authGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
     {
@@ -18,7 +18,7 @@ const routes: Routes = [
     {
         path: '',
         component: MainLayoutComponent,
-        canActivate: [AuthGuard],
+        canActivate: [authGuard],
         children: [
             {
                 path: '',
@@ -32,37 +32,37 @@ const routes: Routes = [
             {
                 path: 'users',
                 loadChildren: () => import('./modules/users/users.module').then(m => m.UsersModule),
-                data: { roles: ['admin'] }
+                data: { roles: ['administrador'] }
             },
             {
                 path: 'inventory',
                 loadChildren: () => import('./modules/inventory/inventory.module').then(m => m.InventoryModule),
-                data: { roles: ['admin', 'cajero'] }
+                data: { roles: ['administrador', 'cajero'] }
             },
             {
                 path: 'orders',
                 loadChildren: () => import('./modules/orders/orders.module').then(m => m.OrdersModule),
-                data: { roles: ['admin', 'cajero', 'mesero'] }
+                data: { roles: ['administrador', 'cajero', 'mesero'] }
             },
             {
                 path: 'tables',
                 loadChildren: () => import('./modules/tables/tables.module').then(m => m.TablesModule),
-                data: { roles: ['admin', 'cajero', 'mesero'] }
+                data: { roles: ['administrador', 'cajero', 'mesero'] }
             },
             {
                 path: 'payments',
                 loadChildren: () => import('./modules/payments/payments.module').then(m => m.PaymentsModule),
-                data: { roles: ['admin', 'cajero'] }
+                data: { roles: ['administrador', 'cajero'] }
             },
             {
                 path: 'reports',
                 loadChildren: () => import('./modules/reports/reports.module').then(m => m.ReportsModule),
-                data: { roles: ['admin', 'cajero'] }
+                data: { roles: ['administrador', 'cajero'] }
             },
             {
                 path: 'sucursales',
                 loadChildren: () => import('./modules/sucursales/sucursales.module').then(m => m.SucursalesModule),
-                data: { roles: ['admin'] }
+                data: { roles: ['administrador'] }
             }
         ]
     },

@@ -13,7 +13,7 @@ const routes: Routes = [
     component: PlaceholderComponent,
     canActivate: [authGuard, roleGuard],
     data: {
-      roles: ['admin', 'cajero'],
+      roles: ['administrador', 'cajero'],
       title: 'Reportes',
       message: 'El módulo de reportes estará disponible próximamente. Aquí podrás generar y visualizar reportes de ventas y ganancias.'
     }

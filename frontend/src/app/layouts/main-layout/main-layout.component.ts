@@ -27,14 +27,14 @@ export class MainLayoutComponent implements OnInit {
     isLoginPage = false;
 
     menuOptions: MenuOption[] = [
-        { name: 'Dashboard', route: '/dashboard', icon: 'dashboard', roles: ['admin', 'cajero', 'mesero'] },
-        { name: 'Mesas', route: '/tables', icon: 'table_restaurant', roles: ['admin', 'cajero', 'mesero'] },
-        { name: 'Pedidos', route: '/orders', icon: 'receipt_long', roles: ['admin', 'cajero', 'mesero'] },
-        { name: 'Inventario', route: '/inventory', icon: 'inventory', roles: ['admin', 'cajero'] },
-        { name: 'Pagos', route: '/payments', icon: 'payments', roles: ['admin', 'cajero'] },
-        { name: 'Reportes', route: '/reports', icon: 'assessment', roles: ['admin', 'cajero'] },
-        { name: 'Usuarios', route: '/users', icon: 'people', roles: ['admin'] },
-        { name: 'Sucursales', route: '/branches', icon: 'store', roles: ['admin'] }
+        { name: 'Dashboard', route: '/dashboard', icon: 'dashboard', roles: ['administrador', 'cajero', 'mesero'] },
+        { name: 'Mesas', route: '/tables', icon: 'table_restaurant', roles: ['administrador', 'cajero', 'mesero'] },
+        { name: 'Pedidos', route: '/orders', icon: 'receipt_long', roles: ['administrador', 'cajero', 'mesero'] },
+        { name: 'Inventario', route: '/inventory', icon: 'inventory', roles: ['administrador', 'cajero'] },
+        { name: 'Pagos', route: '/payments', icon: 'payments', roles: ['administrador', 'cajero'] },
+        { name: 'Reportes', route: '/reports', icon: 'assessment', roles: ['administrador', 'cajero'] },
+        { name: 'Usuarios', route: '/users', icon: 'people', roles: ['administrador'] },
+        { name: 'Sucursales', route: '/branches', icon: 'store', roles: ['administrador'] }
     ];
 
     constructor(
@@ -68,7 +68,7 @@ export class MainLayoutComponent implements OnInit {
 
     hasRoleForOption(option: MenuOption): boolean {
         const hasRole = option.roles.some(role => {
-            if (role === 'admin') return this.authService.isAdmin();
+            if (role === 'administrador') return this.authService.isAdmin();
             if (role === 'cajero') return this.authService.isCajero();
             if (role === 'mesero') return this.authService.isMesero();
             return false;
