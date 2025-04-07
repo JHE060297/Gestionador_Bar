@@ -5,32 +5,32 @@ import { SharedModule } from '../../shared/shared.module';
 import { UsersListComponent } from './users-list/users-list.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { UserDetailComponent } from './user-detail/user-detail.component';
-import { AuthGuard } from '../../core/guards/auth.guard';
-import { RoleGuard } from '../../core/guards/role.guard';
+import { authGuard } from '../../core/guards/auth.guard';
+import { roleGuard } from '../../core/guards/role.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: UsersListComponent,
-    canActivate: [AuthGuard, RoleGuard],
+    canActivate: [authGuard, roleGuard],
     data: { roles: ['admin'] }
   },
   {
     path: 'new',
     component: UserFormComponent,
-    canActivate: [AuthGuard, RoleGuard],
+    canActivate: [authGuard, roleGuard],
     data: { roles: ['admin'] }
   },
   {
     path: 'edit/:id',
     component: UserFormComponent,
-    canActivate: [AuthGuard, RoleGuard],
+    canActivate: [authGuard, roleGuard],
     data: { roles: ['admin'] }
   },
   {
     path: ':id',
     component: UserDetailComponent,
-    canActivate: [AuthGuard, RoleGuard],
+    canActivate: [authGuard, roleGuard],
     data: { roles: ['admin'] }
   }
 ];

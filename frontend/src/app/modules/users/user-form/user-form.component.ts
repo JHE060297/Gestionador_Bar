@@ -62,31 +62,55 @@ export class UserFormComponent implements OnInit {
 
     loadInitialData(): void {
         this.isLoading = true;
-
-        // Cargar roles y sucursales en paralelo
-        forkJoin({
-            roles: this.userService.getRoles().pipe(catchError(() => of([]))),
-            branches: this.sucursalesService.getBranches().pipe(catchError(() => of([]))),
-            user: this.isNewUser ? of(null) : this.userService.getUserById(this.userId as number).pipe(catchError(() => of(null)))
-        })
-            .pipe(
-                finalize(() => this.isLoading = false)
-            )
-            .subscribe(
-                result => {
-                    this.roles = result.roles;
-                    this.branches = result.branches;
-
-                    // Si es edición, llenar el formulario con los datos del usuario
-                    if (!this.isNewUser && result.user) {
-                        this.populateForm(result.user);
-                    }
+        this.userService.getRoles()
+            .subscribe({
+                next: (roles) => {
+                    this.roles = Array.isArray(roles) ? roles : Object.values(roles);
+                    this.loadSucursales();
                 },
-                error => {
+                error: error => {
                     this.error = 'Error al cargar datos iniciales';
                     console.error('Error loading initial data', error);
                 }
-            );
+            });
+    }
+
+    loadSucursales(): void {
+        this.sucursalesService.getBranches()
+            .subscribe({
+                next: (branches) => {
+                    this.branches = Array.isArray(branches) ? branches : Object.values(branches);
+
+                    if (!this.isNewUser && this.userId) {
+                        this.loadUserData();
+                    } else {
+                        this.isLoading = false;
+                    }
+                },
+                error: error => {
+                    this.error = 'Error al cargar sucursales';
+                    console.error('Error loading branches', error);
+                    this.isLoading = false;
+                }
+            });
+    }
+
+    loadUserData(): void {
+        if (!this.userId) return;
+
+        this.userService.getUserById(this.userId).subscribe({
+            next: (user) => {
+                if (user) {
+                    this.populateForm(user);
+                }
+                this.isLoading = false;
+            },
+            error: (error) => {
+                console.error('Error loading user', error);
+                this.error = 'Error al cargar datos del usuario';
+                this.isLoading = false;
+            }
+        });
     }
 
     populateForm(user: Usuario): void {
@@ -127,8 +151,8 @@ export class UserFormComponent implements OnInit {
 
         operation.pipe(
             finalize(() => this.isSubmitting = false)
-        ).subscribe(
-            (response) => {
+        ).subscribe({
+            next: (response) => {
                 this.snackBar.open(
                     this.isNewUser
                         ? 'Usuario creado exitosamente'
@@ -138,14 +162,14 @@ export class UserFormComponent implements OnInit {
                 );
                 this.router.navigate(['/users']);
             },
-            (error) => {
+            error: (error) => {
                 const errorMessage = this.isNewUser
                     ? 'Error al crear usuario'
                     : 'Error al actualizar usuario';
                 this.snackBar.open(errorMessage, 'Cerrar', { duration: 5000 });
                 console.error('Error with user operation', error);
             }
-        );
+        });
     }
 
     onCancel(): void {

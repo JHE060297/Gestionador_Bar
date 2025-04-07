@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../core/authentication/auth.service';
 import { Usuario } from '../../core/models/user.model';
+import { sharedImports } from '../../shared/shared.imports';
 
 @Component({
-    standalone: false,
     selector: 'app-dashboard',
+    standalone: true,
+    imports: [sharedImports],
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss']
 })

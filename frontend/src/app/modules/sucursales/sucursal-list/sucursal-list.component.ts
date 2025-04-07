@@ -7,13 +7,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SucursalService } from '../../../core/services/sucursales.service';
 import { Sucursal } from '../../../core/models/user.model';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { sharedImports } from '../../../shared/shared.imports';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
-    standalone: true,
-    imports: [sharedImports],
     selector: 'app-sucursal-list',
+    standalone: true,
+    imports: [CommonModule, ...sharedImports],
     templateUrl: './sucursal-list.component.html',
     styleUrls: ['./sucursal-list.component.scss']
 })
@@ -44,17 +45,17 @@ export class SucursalListComponent implements OnInit {
 
     loadBranches() {
         this.isLoading = true;
-        this.sucursalService.getBranches().subscribe(
-            (branches) => {
+        this.sucursalService.getBranches().subscribe({
+            next: (branches) => {
                 this.dataSource.data = branches;
                 this.isLoading = false;
             },
-            (error) => {
+            error: (error) => {
                 this.error = 'Error al cargar sucursales';
-                console.error('Error loading branches', error);
+                console.error('Error al cargar sucursales', error);
                 this.isLoading = false;
             }
-        );
+        });
     }
 
     applyFilter(event: Event) {
@@ -88,20 +89,20 @@ export class SucursalListComponent implements OnInit {
 
         confirmDialog.afterClosed().subscribe(result => {
             if (result) {
-                this.sucursalService.deleteBranch(branch.id_sucursal).subscribe(
-                    () => {
+                this.sucursalService.deleteBranch(branch.id_sucursal).subscribe({
+                    next: () => {
                         this.dataSource.data = this.dataSource.data.filter(b => b.id_sucursal !== branch.id_sucursal);
                         this.snackBar.open('Sucursal eliminada exitosamente', 'Cerrar', {
                             duration: 3000
                         });
                     },
-                    (error) => {
+                    error: (error) => {
                         this.snackBar.open('Error al eliminar sucursal', 'Cerrar', {
                             duration: 3000
                         });
                         console.error('Error deleting branch', error);
                     }
-                );
+                });
             }
         });
     }

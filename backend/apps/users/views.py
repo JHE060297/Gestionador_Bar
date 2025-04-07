@@ -2,8 +2,8 @@ from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Usuario
-from .serializers import UsuarioSerializer
+from .models import Usuario, Rol
+from .serializers import UsuarioSerializer, RolSerializer
 from .permissions import IsAdmin
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -67,6 +67,17 @@ class UsuarioViewSet(viewsets.ModelViewSet):
             return Response({"status": "sucursal cambiada exitosamente"})
         except Sucursal.DoesNotExist:
             return Response({"error": "Sucursal no encontrada"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class RolViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Rol.objects.all()
+    serializer_class = RolSerializer
+
+    def list(self, request, *args, **kwargs):
+        # Para asegurar que devuelve una lista
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):

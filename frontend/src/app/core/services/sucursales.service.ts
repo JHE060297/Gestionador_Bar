@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Sucursal } from '../models/user.model';
@@ -36,19 +36,15 @@ export class SucursalService {
 
     // Mesas
     getTables(filters?: any): Observable<Mesa[]> {
-        let url = `${this.apiUrl}tables/`;
+        let params = new HttpParams();
         if (filters) {
-            const params = new URLSearchParams();
             Object.keys(filters).forEach(key => {
                 if (filters[key] !== null && filters[key] !== undefined) {
-                    params.set(key, filters[key]);
+                    params = params.set(key, filters[key]);
                 }
             });
-            if (params.toString()) {
-                url += `?${params.toString()}`;
-            }
         }
-        return this.http.get<Mesa[]>(url);
+        return this.http.get<Mesa[]>(`${this.apiUrl}mesas/`, { params });
     }
 
     getTableById(id: number): Observable<Mesa> {

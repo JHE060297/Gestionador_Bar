@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
+import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
     {
@@ -18,8 +20,56 @@ export const routes: Routes = [
             },
             {
                 path: 'dashboard',
-                loadChildren: () =>
-                    import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule)
+                loadComponent: () =>
+                    import('./modules/dashboard/dashboard.component').then(m => m.DashboardComponent),
+                canActivate: [authGuard]
+            },
+            {
+                path: 'branches',
+                children: [
+                    {
+                        path: '',
+                        loadComponent: () => import('./modules/sucursales/sucursal-list/sucursal-list.component')
+                            .then(m => m.SucursalListComponent),
+                        canActivate: [authGuard, roleGuard],
+                        data: { roles: ['admin'] }
+                    },
+                    {
+                        path: 'new',
+                        loadComponent: () => import('./modules/sucursales/sucursal-form/sucursal-form.component')
+                            .then(m => m.SucursalFormComponent),
+                        canActivate: [authGuard, roleGuard],
+                        data: { roles: ['admin'] }
+                    },
+                    {
+                        path: 'edit/:id',
+                        loadComponent: () => import('./modules/sucursales/sucursal-form/sucursal-form.component')
+                            .then(m => m.SucursalFormComponent),
+                        canActivate: [authGuard, roleGuard],
+                        data: { roles: ['admin'] }
+                    },
+                    {
+                        path: ':id/tables',
+                        loadComponent: () => import('./modules/tables/tables-list/tables-list.component')
+                            .then(m => m.MesasListComponent),
+                        canActivate: [authGuard],
+                        data: { roles: ['admin', 'cajero', 'mesero'] }
+                    },
+                    {
+                        path: ':id/tables/new',
+                        loadComponent: () => import('./modules/tables/table-form/table-form.component')
+                            .then(m => m.TableFormComponent),
+                        canActivate: [authGuard, roleGuard],
+                        data: { roles: ['admin'] }
+                    },
+                    {
+                        path: ':id/tables/edit/:tableId',
+                        loadComponent: () => import('./modules/tables/table-form/table-form.component')
+                            .then(m => m.TableFormComponent),
+                        canActivate: [authGuard, roleGuard],
+                        data: { roles: ['admin'] }
+                    }
+                ]
             },
             {
                 path: 'users',
@@ -50,11 +100,6 @@ export const routes: Routes = [
                 path: 'reports',
                 loadChildren: () =>
                     import('./modules/reports/reports.module').then(m => m.ReportsModule)
-            },
-            {
-                path: 'branches',
-                loadChildren: () =>
-                    import('./modules/sucursales/sucursales.module').then(m => m.SucursalesModule)
             },
             {
                 path: 'access-denied',

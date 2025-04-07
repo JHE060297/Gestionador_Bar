@@ -14,18 +14,25 @@ import { environment } from '../../../environments/environment';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
     private refreshTokenInProgress = false;
-    private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+    private refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
     constructor(private authService: AuthService) { }
 
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+
         // No interceptar solicitudes de autenticación
         if (this.isAuthRequest(request)) {
             return next.handle(request);
         }
 
+        const token = this.authService.getToken();
+
         // Agregar token a la solicitud si existe
-        request = this.addToken(request, this.authService.getToken());
+        if (token) {
+            request = this.addTokenToRequest(request, token);
+        } else {
+            console.warn('⚠️ No hay token disponible para autorizar esta solicitud');
+        }
 
         // Manejar la solicitud con la lógica de refresh token
         return next.handle(request).pipe(
@@ -38,7 +45,7 @@ export class AuthInterceptor implements HttpInterceptor {
                             filter(token => token !== null),
                             take(1),
                             switchMap(token => {
-                                return next.handle(this.addToken(request, token));
+                                return next.handle(this.addTokenToRequest(request, token!));
                             })
                         );
                     } else {
@@ -51,14 +58,13 @@ export class AuthInterceptor implements HttpInterceptor {
                                 this.refreshTokenInProgress = false;
                                 this.refreshTokenSubject.next(token);
 
-                                if (!token) {
-                                    // Si no se pudo refrescar el token, cerrar sesión
+                                if (!token || token.trim() === '') {
                                     this.authService.logout();
                                     return throwError(() => new Error('Sesión expirada'));
                                 }
 
                                 // Reintentar con el nuevo token
-                                return next.handle(this.addToken(request, token));
+                                return next.handle(this.addTokenToRequest(request, token));
                             }),
                             catchError(err => {
                                 this.refreshTokenInProgress = false;
@@ -78,15 +84,16 @@ export class AuthInterceptor implements HttpInterceptor {
         );
     }
 
-    private addToken(request: HttpRequest<any>, token: string | null): HttpRequest<any> {
-        if (token) {
-            return request.clone({
-                setHeaders: {
-                    Authorization: `${environment.tokenPrefix} ${token}`
-                }
-            });
-        }
-        return request;
+    private addTokenToRequest(request: HttpRequest<any>, token: string): HttpRequest<any> {
+        const authHeader = `Bearer ${token}`;
+
+        const clonedRequest = request.clone({
+            setHeaders: {
+                Authorization: authHeader
+            }
+        });
+
+        return clonedRequest;
     }
 
     private isAuthRequest(request: HttpRequest<any>): boolean {
@@ -95,6 +102,7 @@ export class AuthInterceptor implements HttpInterceptor {
             `${environment.apiUrl}token/refresh/`
         ];
 
-        return authUrls.some(url => request.url.includes(url));
+        // Comprobación exacta para evitar falsos positivos
+        return authUrls.some(url => request.url === url);
     }
 }

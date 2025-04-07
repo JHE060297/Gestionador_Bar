@@ -69,7 +69,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         return f"{self.nombre} {self.apellido}"
 
     def is_admin(self):
-        return self.id_rol.nombre == "admin"
+        return self.id_rol.nombre == "administrador"
 
     def is_cajero(self):
         return self.id_rol.nombre == "cajero"
