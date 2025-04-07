@@ -13,8 +13,8 @@ class Reporte(models.Model):
     ]
 
     id_reporte = models.AutoField(primary_key=True)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE)
+    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    id_sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE)
     fecha_generacion = models.DateTimeField(auto_now_add=True)
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
@@ -26,4 +26,4 @@ class Reporte(models.Model):
         db_table = "reporte"
 
     def __str__(self):
-        return f"Reporte {self.id_reporte} - {self.usuario.usuario} - {self.fecha_generacion}"
+        return f"Reporte {self.id_reporte} - {self.id_usuario.usuario} - {self.fecha_generacion}"

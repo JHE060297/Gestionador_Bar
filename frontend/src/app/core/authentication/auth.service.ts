@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
     private apiUrl = environment.apiUrl;
-    private currentUserSubject = new BehaviorSubject<Usuario | null>(null);
+    public currentUserSubject = new BehaviorSubject<Usuario | null>(null);
     private tokenKey = 'access_token';
     private refreshTokenKey = 'refresh_token';
     private userKey = 'current_user';
@@ -52,6 +52,7 @@ export class AuthService {
                             apellido: payload.apellido || '',
                             usuario: credentials.usuario,
                             id_rol: 0,
+                            rol_nombre: payload.rol || '',
                             id_sucursal: 0,
                             is_active: true,
                             is_staff: payload.is_admin || false,
@@ -125,11 +126,10 @@ export class AuthService {
 
     hasRole(roleName: string): boolean {
         const user = this.currentUserSubject.value;
-        if (!user) return false;
 
+        if (!user) return false;
         // Si el usuario es admin, tiene acceso a todo 
         if (user.is_staff) return true;
-
         // Comprobar el rol específico
         return user.rol_nombre === roleName;
     }

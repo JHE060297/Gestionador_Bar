@@ -14,8 +14,8 @@ interface MenuOption {
 }
 
 @Component({
-    standalone: true,
     selector: 'app-main-layout',
+    standalone: true,
     imports: [sharedImports],
     templateUrl: './main-layout.component.html',
     styleUrls: ['./main-layout.component.scss']
@@ -30,7 +30,7 @@ export class MainLayoutComponent implements OnInit {
         { name: 'Dashboard', route: '/dashboard', icon: 'dashboard', roles: ['administrador', 'cajero', 'mesero'] },
         { name: 'Mesas', route: '/tables', icon: 'table_restaurant', roles: ['administrador', 'cajero', 'mesero'] },
         { name: 'Pedidos', route: '/orders', icon: 'receipt_long', roles: ['administrador', 'cajero', 'mesero'] },
-        { name: 'Inventario', route: '/inventory', icon: 'inventory', roles: ['administrador', 'cajero'] },
+        { name: 'Inventario', route: '/inventory', icon: 'inventory', roles: ['administrador', 'cajero', 'mesero'] },
         { name: 'Pagos', route: '/payments', icon: 'payments', roles: ['administrador', 'cajero'] },
         { name: 'Reportes', route: '/reports', icon: 'assessment', roles: ['administrador', 'cajero'] },
         { name: 'Usuarios', route: '/users', icon: 'people', roles: ['administrador'] },
@@ -67,6 +67,7 @@ export class MainLayoutComponent implements OnInit {
     }
 
     hasRoleForOption(option: MenuOption): boolean {
+
         const hasRole = option.roles.some(role => {
             if (role === 'administrador') return this.authService.isAdmin();
             if (role === 'cajero') return this.authService.isCajero();

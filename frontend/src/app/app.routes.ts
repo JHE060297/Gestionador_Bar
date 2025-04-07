@@ -4,6 +4,11 @@ import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
     {
+        path: 'login',
+        loadComponent: () =>
+            import('./pages/login/login.component').then(m => m.LoginComponent)
+    },
+    {
         path: '',
         loadComponent: () =>
             import('./layouts/main-layout/main-layout.component').then(m => m.MainLayoutComponent),
@@ -14,16 +19,12 @@ export const routes: Routes = [
                 pathMatch: 'full'
             },
             {
-                path: 'login',
-                loadComponent: () =>
-                    import('./pages/login/login.component').then(m => m.LoginComponent)
-            },
-            {
                 path: 'dashboard',
                 loadComponent: () =>
                     import('./modules/dashboard/dashboard.component').then(m => m.DashboardComponent),
                 canActivate: [authGuard]
             },
+            // --- Rutas para administración de sucursales y mesas ---
             {
                 path: 'branches',
                 children: [
@@ -72,34 +73,46 @@ export const routes: Routes = [
                 ]
             },
             {
-                path: 'users',
-                loadChildren: () =>
-                    import('./modules/users/users.module').then(m => m.UsersModule)
-            },
-            {
-                path: 'inventory',
-                loadChildren: () =>
-                    import('./modules/inventory/inventory.module').then(m => m.InventoryModule)
-            },
-            {
-                path: 'orders',
-                loadChildren: () =>
-                    import('./modules/orders/orders.module').then(m => m.OrdersModule)
-            },
-            {
                 path: 'tables',
                 loadChildren: () =>
                     import('./modules/tables/tables.module').then(m => m.TablesModule)
             },
+
+            // --- Lazy-loaded modules protegidos ---
+            {
+                path: 'users',
+                loadChildren: () =>
+                    import('./modules/users/users.module').then(m => m.UsersModule),
+                canActivate: [roleGuard],
+                data: { roles: ['administrador'] }
+            },
+            {
+                path: 'inventory',
+                loadChildren: () =>
+                    import('./modules/inventory/inventory.module').then(m => m.InventoryModule),
+                canActivate: [roleGuard],
+                data: { roles: ['administrador', 'cajero', 'mesero'] }
+            },
+            {
+                path: 'orders',
+                loadChildren: () =>
+                    import('./modules/orders/orders.module').then(m => m.OrdersModule),
+                canActivate: [roleGuard],
+                data: { roles: ['administrador', 'cajero', 'mesero'] }
+            },
             {
                 path: 'payments',
                 loadChildren: () =>
-                    import('./modules/payments/payments.module').then(m => m.PaymentsModule)
+                    import('./modules/payments/payments.module').then(m => m.PaymentsModule),
+                canActivate: [roleGuard],
+                data: { roles: ['administrador', 'cajero'] }
             },
             {
                 path: 'reports',
                 loadChildren: () =>
-                    import('./modules/reports/reports.module').then(m => m.ReportsModule)
+                    import('./modules/reports/reports.module').then(m => m.ReportsModule),
+                canActivate: [roleGuard],
+                data: { roles: ['administrador', 'cajero'] }
             },
             {
                 path: 'access-denied',

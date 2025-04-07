@@ -14,16 +14,16 @@ class Pedido(models.Model):
 
     id_pedido = models.AutoField(primary_key=True)
     id_mesa = models.ForeignKey(Mesa, on_delete=models.CASCADE, related_name="pedidos")
-    estado = models.CharField(max_length=15, choices=STATUS_CHOICES, default="pending")
+    estado = models.CharField(max_length=15, choices=STATUS_CHOICES, default="pendiente")
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    fecha_de_creacion = models.DateTimeField(auto_now_add=True)
+    actualizado_a = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = "Pedido"
         verbose_name_plural = "Pedidos"
         db_table = "pedido"
-        ordering = ["-created_at"]
+        ordering = ["-fecha_de_creacion"]
 
     def __str__(self):
         return f"Pedido {self.id_pedido} - Mesa {self.id_mesa.numero} - {self.get_estado_display()}"
@@ -41,7 +41,6 @@ class DetallePedido(models.Model):
     id_producto = models.ForeignKey("inventory.Producto", on_delete=models.CASCADE)
     cantidad = models.IntegerField()
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
-    descripcion = models.CharField(max_length=45, blank=True, null=True)
 
     class Meta:
         verbose_name = "Detalle de Pedido"
@@ -84,9 +83,6 @@ class Pago(models.Model):
     monto = models.DecimalField(max_digits=10, decimal_places=2)
     metodo_pago = models.CharField(max_length=15, choices=METODOS_PAGO)
     fecha_hora = models.DateTimeField(auto_now_add=True)
-
-    # Campos adicionales que podrías necesitar
-    referencia_pago = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
         verbose_name = "Pago"

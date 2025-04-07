@@ -55,7 +55,7 @@ export class DashboardComponent implements OnInit {
         };
 
         if (!this.authService.isAuthenticated()) {
-            return; // No cargar datos si el usuario no está autenticado
+            return; 
         }
 
 

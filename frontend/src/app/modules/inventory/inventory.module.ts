@@ -12,7 +12,7 @@ const routes: Routes = [
     component: PlaceholderComponent,
     canActivate: [authGuard, roleGuard],
     data: {
-      roles: ['administrador', 'cajero'],
+      roles: ['administrador', 'cajero', 'mesero'],
       title: 'Gestión de Inventario',
       message: 'El módulo de inventario estará disponible próximamente. Aquí podrás gestionar productos y existencias.'
     }

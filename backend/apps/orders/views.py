@@ -11,12 +11,12 @@ from apps.inventory.models import Producto, TransaccionInventario
 
 
 class PedidoViewSet(viewsets.ModelViewSet):
-    queryset = Pedido.objects.all().order_by("-created_at")
+    queryset = Pedido.objects.all().order_by("-fecha_de_creacion")
     serializer_class = PedidoSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ["id_mesa", "estado", "id_mesa__id_sucursal"]
     search_fields = ["id_mesa__numero"]
-    ordering_fields = ["created_at", "total"]
+    ordering_fields = ["fecha_de_creacion", "total"]
 
     def get_permissions(self):
         if self.action in ["create"]:

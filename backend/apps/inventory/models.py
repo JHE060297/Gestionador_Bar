@@ -23,22 +23,23 @@ class Producto(models.Model):
 
 class Inventario(models.Model):
     id_inventario = models.AutoField(primary_key=True)
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name="existencias")
-    sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, related_name="inventarios")
+    id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name="existencias")
+    id_sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, related_name="inventarios")
     cantidad = models.IntegerField(default=0)
-    alert_threshold = models.IntegerField(default=2)
+    alerta = models.IntegerField(default=2)
 
     class Meta:
         verbose_name = "Inventario"
         verbose_name_plural = "Inventarios"
-        unique_together = ("sucursal", "producto")
+        db_table = "inventario"
+        unique_together = ("id_sucursal", "id_producto")
 
     def __str__(self):
-        return f"{self.producto.nombre_producto} - {self.sucursal.nombre_sucursal}: {self.cantidad} unidades"
+        return f"{self.id_producto.nombre_producto} - {self.id_sucursal.nombre_sucursal}: {self.cantidad} unidades"
 
     @property
     def is_low_stock(self):
-        return self.cantidad <= self.alert_threshold
+        return self.cantidad <= self.alerta
 
 
 class TransaccionInventario(models.Model):
@@ -56,7 +57,6 @@ class TransaccionInventario(models.Model):
     tipo_transaccion = models.CharField(max_length=13, choices=TRANSACTION_TYPES)
     transaccion_fecha_hora = models.DateTimeField(auto_now_add=True)
     id_usuario = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True)
-    comentario = models.TextField(blank=True, null=True)
 
     class Meta:
         verbose_name = "Transacción de Inventario"

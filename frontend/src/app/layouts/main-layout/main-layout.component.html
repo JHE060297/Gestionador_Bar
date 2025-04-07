@@ -4,7 +4,7 @@
         <button mat-icon-button (click)="toggleSidenav()">
             <mat-icon>menu</mat-icon>
         </button>
-        <h1 class="app-name">Gestión de Restaurantes</h1>
+        <h1 class="app-name">Terraza 2.0</h1>
         <span class="spacer"></span>
 
         <ng-container *ngIf="currentUser$ | async as currentUser">
@@ -44,11 +44,13 @@
             [fixedInViewport]="false" *ngIf="showNavbar">
             <mat-nav-list>
                 <ng-container *ngFor="let option of menuOptions">
-                    <a mat-list-item [routerLink]="option.route" routerLinkActive="active-link"
-                        *ngIf="hasRoleForOption(option)">
-                        <mat-icon matListItemIcon>{{ option.icon }}</mat-icon>
-                        <span matListItemTitle>{{ option.name }}</span>
-                    </a>
+                    <ng-container *ngIf="hasRoleForOption(option)">
+                        <a mat-list-item [routerLink]="option.route" routerLinkActive="active-link"
+                            *ngIf="hasRoleForOption(option)">
+                            <mat-icon matListItemIcon>{{ option.icon }}</mat-icon>
+                            <span matListItemTitle>{{ option.name }}</span>
+                        </a>
+                    </ng-container>
                 </ng-container>
             </mat-nav-list>
         </mat-sidenav>
