@@ -97,6 +97,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token["apellido"] = user.apellido
         token["rol"] = user.id_rol.nombre
         token["is_admin"] = user.is_admin()
+        token["id_sucursal"] = user.id_sucursal.id_sucursal
+        token["id_rol"] = user.id_rol.id_rol
 
         return token
 

@@ -51,9 +51,9 @@ export class AuthService {
                             nombre: payload.nombre || '',
                             apellido: payload.apellido || '',
                             usuario: credentials.usuario,
-                            id_rol: 0,
+                            id_rol: payload.id_rol || 0,
                             rol_nombre: payload.rol || '',
-                            id_sucursal: 0,
+                            id_sucursal: payload.id_sucursal || 0,
                             is_active: true,
                             is_staff: payload.is_admin || false,
                             date_joined: ''

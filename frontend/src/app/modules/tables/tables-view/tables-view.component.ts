@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SucursalService } from '../../../core/services/sucursales.service';
@@ -9,17 +9,18 @@ import { Mesa } from '../../../core/models/orders.model';
 import { Pedido } from '../../../core/models/orders.model';
 import { OrdersService } from '../../../core/services/orders.service';
 import { Router } from '@angular/router';
-import { forkJoin, Observable, of } from 'rxjs';
-import { catchError, finalize } from 'rxjs/operators';
+import { forkJoin, Observable, of, interval, Subscription } from 'rxjs';
+import { catchError, finalize, startWith, switchMap, map } from 'rxjs/operators';
+import { sharedImports } from '../../../shared/shared.imports';
 
 @Component({
+    selector: 'app-tables-view',
     standalone: true,
     imports: [sharedImports],
-    selector: 'app-tables-view',
     templateUrl: './tables-view.component.html',
     styleUrls: ['./tables-view.component.scss']
 })
-export class TablesViewComponent implements OnInit {
+export class TablesViewComponent implements OnInit, OnDestroy {
     tables: Mesa[] = [];
     branches: Sucursal[] = [];
     selectedBranchId: number | null = null;
@@ -32,6 +33,8 @@ export class TablesViewComponent implements OnInit {
     // Filtros
     statusFilter: string | null = null; // 'libre', 'ocupada', 'pagado'
     showInactiveTables = false;
+
+    private refreshSubscription: Subscription | null = null;
 
     constructor(
         private sucursalesServices: SucursalService,
@@ -52,15 +55,48 @@ export class TablesViewComponent implements OnInit {
             if (user) {
                 this.userBranchId = user.id_sucursal;
                 this.selectedBranchId = user.id_sucursal;
-                this.loadData();
+
+                this.startAutoRefresh();
             }
         });
     }
 
-    loadData(): void {
-        this.isLoading = true;
-        this.error = '';
+    ngOnDestroy(): void {
+        // Limpiar la suscripción al salir del componente
+        if (this.refreshSubscription) {
+            this.refreshSubscription.unsubscribe();
+        }
+    }
 
+    startAutoRefresh(): void {
+        // Cancelar cualquier suscripción existente
+        if (this.refreshSubscription) {
+            this.refreshSubscription.unsubscribe();
+        }
+
+        // Crear un intervalo de 30 segundos, empezando inmediatamente
+        this.refreshSubscription = interval(30000)
+            .pipe(
+                startWith(0), // Emite inmediatamente al principio
+                switchMap(() => {
+                    this.isLoading = true;
+                    return this.loadDataObservable();
+                })
+            )
+            .subscribe(
+                result => {
+                    this.tables = result.tables;
+                    this.loadCurrentOrders();
+                    this.isLoading = false;
+                },
+                error => {
+                    this.error = 'Error al cargar datos';
+                    this.isLoading = false;
+                }
+            );
+    }
+
+    loadDataObservable(): Observable<any> {
         // Observable para sucursales (solo para admin)
         const branches$ = this.isAdmin
             ? this.sucursalesServices.getBranches().pipe(
@@ -92,22 +128,21 @@ export class TablesViewComponent implements OnInit {
         );
 
         // Cargar datos en paralelo
-        forkJoin({
+        return forkJoin({
             branches: branches$,
             tables: tables$
-        })
-            .pipe(
-                finalize(() => this.isLoading = false)
-            )
-            .subscribe(result => {
+        }).pipe(
+            map(result => {
                 if (this.isAdmin) {
                     this.branches = result.branches;
                 }
-                this.tables = result.tables;
+                return { tables: result.tables };
+            })
+        );
+    }
 
-                // Cargar pedidos actuales para cada mesa
-                this.loadCurrentOrders();
-            });
+    loadData(): void {
+        this.startAutoRefresh();
     }
 
     loadCurrentOrders(): void {
@@ -267,7 +302,6 @@ export class TablesViewComponent implements OnInit {
 // Dialog Component for Confirmation
 import { Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { sharedImports } from '../../../shared/shared.imports';
 
 @Component({
     selector: 'app-confirm-dialog',
