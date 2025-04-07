@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../core/authentication/auth.service';
+import { SucursalService } from '../../core/services/sucursales.service';
 import { Usuario } from '../../core/models/user.model';
 import { sharedImports } from '../../shared/shared.imports';
 
@@ -24,7 +25,10 @@ export class DashboardComponent implements OnInit {
         lowStockItems: 0
     };
 
-    constructor(private authService: AuthService) { }
+    constructor(
+        private authService: AuthService,
+        private sucursalService: SucursalService
+    ) { }
 
     ngOnInit(): void {
         // Suscripción al usuario actual
@@ -42,13 +46,29 @@ export class DashboardComponent implements OnInit {
     }
 
     loadDashboardData(): void {
-        // Aquí cargaríamos datos reales del backend
-        // Por ahora usamos datos de muestra
+        // datos de muestra
         this.dashboardCards = {
             pendingOrders: 5,
             dailySales: 152000,
-            availableTables: 8,
+            availableTables: 0,
             lowStockItems: 3
         };
+
+        if (!this.authService.isAuthenticated()) {
+            return; // No cargar datos si el usuario no está autenticado
+        }
+
+
+
+        this.sucursalService.getTables({ estado: 'libre' }).subscribe({
+            next: (tables) => {
+                this.dashboardCards.availableTables = tables.length;
+            },
+            error: (error) => {
+                console.error('Error cargando mesas disponibles:', error);
+            }
+        });
+
     }
+
 }

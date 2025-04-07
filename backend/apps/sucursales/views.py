@@ -22,7 +22,7 @@ class SucursalViewSet(viewsets.ModelViewSet):
         else:
             permission_classes = [IsAdminOCajero | IsMesero]
         return [permission() for permission in permission_classes]
-    
+
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         serializer = self.get_serializer(queryset, many=True)
@@ -47,6 +47,11 @@ class MesaViewSet(viewsets.ModelViewSet):
         else:
             permission_classes = [IsAdminOCajero | IsMesero]
         return [permission() for permission in permission_classes]
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     @action(detail=True, methods=["post"])
     def cambiar_estado(self, request, pk=None):

@@ -32,42 +32,42 @@ export const routes: Routes = [
                         loadComponent: () => import('./modules/sucursales/sucursal-list/sucursal-list.component')
                             .then(m => m.SucursalListComponent),
                         canActivate: [authGuard, roleGuard],
-                        data: { roles: ['admin'] }
+                        data: { roles: ['administrador'] }
                     },
                     {
                         path: 'new',
                         loadComponent: () => import('./modules/sucursales/sucursal-form/sucursal-form.component')
                             .then(m => m.SucursalFormComponent),
                         canActivate: [authGuard, roleGuard],
-                        data: { roles: ['admin'] }
+                        data: { roles: ['administrador'] }
                     },
                     {
                         path: 'edit/:id',
                         loadComponent: () => import('./modules/sucursales/sucursal-form/sucursal-form.component')
                             .then(m => m.SucursalFormComponent),
                         canActivate: [authGuard, roleGuard],
-                        data: { roles: ['admin'] }
+                        data: { roles: ['administrador'] }
                     },
                     {
                         path: ':id/tables',
                         loadComponent: () => import('./modules/tables/tables-list/tables-list.component')
                             .then(m => m.MesasListComponent),
                         canActivate: [authGuard],
-                        data: { roles: ['admin', 'cajero', 'mesero'] }
+                        data: { roles: ['administrador', 'cajero', 'mesero'] }
                     },
                     {
                         path: ':id/tables/new',
                         loadComponent: () => import('./modules/tables/table-form/table-form.component')
                             .then(m => m.TableFormComponent),
                         canActivate: [authGuard, roleGuard],
-                        data: { roles: ['admin'] }
+                        data: { roles: ['administrador'] }
                     },
                     {
                         path: ':id/tables/edit/:tableId',
                         loadComponent: () => import('./modules/tables/table-form/table-form.component')
                             .then(m => m.TableFormComponent),
                         canActivate: [authGuard, roleGuard],
-                        data: { roles: ['admin'] }
+                        data: { roles: ['administrador'] }
                     }
                 ]
             },

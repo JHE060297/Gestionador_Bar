@@ -18,6 +18,11 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     search_fields = ["email", "nombre", "apellido", "usuario"]
     ordering_fields = ["date_joined", "nombre", "apellido", "id_rol"]
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
     @action(detail=True, methods=["post"])
     def activate(self, request, pk=None):
         user = self.get_object()

@@ -48,27 +48,27 @@ export class SucursalService {
     }
 
     getTableById(id: number): Observable<Mesa> {
-        return this.http.get<Mesa>(`${this.apiUrl}tables/${id}/`);
+        return this.http.get<Mesa>(`${this.apiUrl}mesas/${id}/`);
     }
 
     createTable(table: Mesa): Observable<Mesa> {
-        return this.http.post<Mesa>(`${this.apiUrl}tables/`, table);
+        return this.http.post<Mesa>(`${this.apiUrl}mesas/`, table);
     }
 
     updateTable(id: number, table: Partial<Mesa>): Observable<Mesa> {
-        return this.http.patch<Mesa>(`${this.apiUrl}tables/${id}/`, table);
+        return this.http.patch<Mesa>(`${this.apiUrl}mesas/${id}/`, table);
     }
 
     deleteTable(id: number): Observable<any> {
-        return this.http.delete(`${this.apiUrl}tables/${id}/`);
+        return this.http.delete(`${this.apiUrl}mesas/${id}/`);
     }
 
     changeTableStatus(id: number, estado: string): Observable<any> {
-        return this.http.post(`${this.apiUrl}tables/${id}/cambiar_estado/`, { estado });
+        return this.http.post(`${this.apiUrl}mesas/${id}/cambiar_estado/`, { estado });
     }
 
     freeTable(id: number): Observable<any> {
-        return this.http.post(`${this.apiUrl}tables/${id}/liberar_mesa/`, {});
+        return this.http.post(`${this.apiUrl}mesas/${id}/liberar_mesa/`, {});
     }
 
     getTablesByBranch(branchId: number): Observable<Mesa[]> {

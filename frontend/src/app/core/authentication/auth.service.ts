@@ -87,7 +87,9 @@ export class AuthService {
         this.currentUserSubject.next(null);
 
         // Redirigir a login
-        this.router.navigate(['/login']);
+        setTimeout(() => {
+            this.router.navigate(['/login']);
+        }, 0);
     }
 
     refreshToken(): Observable<string> {
