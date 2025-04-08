@@ -94,6 +94,13 @@ export const routes: Routes = [
                 data: { roles: ['administrador', 'cajero', 'mesero'] }
             },
             {
+                path: 'products',
+                loadChildren: () =>
+                    import('./modules/products/products.module').then(m => m.ProductsModule),
+                canActivate: [roleGuard],
+                data: { roles: ['administrador', 'cajero'] }
+            },
+            {
                 path: 'orders',
                 loadChildren: () =>
                     import('./modules/orders/orders.module').then(m => m.OrdersModule),

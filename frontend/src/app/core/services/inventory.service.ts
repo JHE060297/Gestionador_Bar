@@ -88,7 +88,8 @@ export class InventoryService {
     }
 
     adjustInventory(id: number, adjustment: AjusteInventario): Observable<any> {
-        return this.http.post(`${this.apiUrl}inventario/${id}/adjust_stock/`, adjustment);
+        // Asegurarse de que la URL y el formato de los datos sean correctos
+        return this.http.post<any>(`${this.apiUrl}inventario/${id}/adjust_stock/`, adjustment);
     }
 
     // Transacciones

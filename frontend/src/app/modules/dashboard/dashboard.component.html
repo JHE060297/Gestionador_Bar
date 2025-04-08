@@ -71,6 +71,18 @@
         </mat-card>
     </div>
 
+    <!-- Sección de widgets -->
+    <div class="dashboard-widgets" *ngIf="isAdmin || isCajero">
+        <div class="row">
+            <!-- Widget de productos con bajo stock -->
+            <div class="widget-container">
+                <app-low-stock-widget [limit]="5"></app-low-stock-widget>
+            </div>
+
+            <!-- Aquí puedes añadir más widgets en el futuro -->
+        </div>
+    </div>
+
     <!-- Accesos rápidos -->
     <div class="quick-access-section">
         <h2>Acciones Rápidas</h2>
@@ -91,7 +103,7 @@
                     Procesar Pago
                 </button>
 
-                <button mat-raised-button color="primary" routerLink="/inventory/adjust">
+                <button mat-raised-button color="primary" routerLink="/inventory">
                     <mat-icon>edit</mat-icon>
                     Ajustar Inventario
                 </button>
@@ -102,6 +114,11 @@
                 <button mat-raised-button color="primary" routerLink="/reports/new">
                     <mat-icon>assessment</mat-icon>
                     Generar Reporte
+                </button>
+
+                <button mat-raised-button color="primary" routerLink="/products/new">
+                    <mat-icon>add_circle</mat-icon>
+                    Nuevo Producto
                 </button>
 
                 <button mat-raised-button color="primary" routerLink="/users/new">

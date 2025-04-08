@@ -4,18 +4,22 @@ import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { authGuard } from '../../core/guards/auth.guard';
 import { roleGuard } from '../../core/guards/role.guard';
-import { PlaceholderComponent } from '../../shared/components/placeholder/placeholder.component';
+import { InventoryStockComponent } from './inventory-stock/inventory-stock.component';
+import { InventoryTransactionsComponent } from './inventory-transactions/inventory-transactions.component';
+import { StockAdjustmentDialogComponent } from './stock-adjustment-dialog/stock-adjustment-dialog.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: PlaceholderComponent,
+    component: InventoryStockComponent,
     canActivate: [authGuard, roleGuard],
-    data: {
-      roles: ['administrador', 'cajero', 'mesero'],
-      title: 'Gestión de Inventario',
-      message: 'El módulo de inventario estará disponible próximamente. Aquí podrás gestionar productos y existencias.'
-    }
+    data: { roles: ['administrador', 'cajero', 'mesero'] }
+  },
+  {
+    path: 'transactions',
+    component: InventoryTransactionsComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['administrador', 'cajero'] }
   }
 ];
 
@@ -24,6 +28,9 @@ const routes: Routes = [
   imports: [
     CommonModule,
     SharedModule,
+    InventoryStockComponent,
+    InventoryTransactionsComponent,
+    StockAdjustmentDialogComponent,
     RouterModule.forChild(routes)
   ],
   exports: [RouterModule]

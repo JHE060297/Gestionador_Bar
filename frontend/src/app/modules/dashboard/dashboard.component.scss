@@ -91,6 +91,20 @@
     }
 }
 
+.dashboard-widgets {
+    margin-bottom: 40px;
+
+    .row {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 24px;
+    }
+
+    .widget-container {
+        min-height: 300px;
+    }
+}
+
 .quick-access-section {
     h2 {
         margin-bottom: 16px;
@@ -114,6 +128,10 @@
 /* Responsive */
 @media (max-width: 599px) {
     .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-widgets .row {
         grid-template-columns: 1fr;
     }
 

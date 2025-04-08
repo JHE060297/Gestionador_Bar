@@ -1,6 +1,7 @@
 from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django.db.models import F
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db import transaction
 from .models import Producto, Inventario, TransaccionInventario
@@ -23,6 +24,10 @@ class ProductoViewSet(viewsets.ModelViewSet):
             permission_classes = [IsAdminOCajero | IsMesero]  # Todos pueden ver los productos
         return [permission() for permission in permission_classes]
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        return context
+
     @action(detail=True, methods=["post"])
     def toggle_active(self, request, pk=None):
         producto = self.get_object()
@@ -31,13 +36,18 @@ class ProductoViewSet(viewsets.ModelViewSet):
         status_text = "activado" if producto.is_active else "desactivado"
         return Response({"status": f"Producto {status_text} exitosamente"})
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
 
 class InventarioViewSet(viewsets.ModelViewSet):
     queryset = Inventario.objects.all()
     serializer_class = InventarioSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ["sucursal", "producto"]
-    search_fields = ["producto__nombre_producto"]
+    filterset_fields = ["id_sucursal", "id_producto"]
+    search_fields = ["id_producto__nombre_producto"]
     ordering_fields = ["cantidad"]
 
     def get_permissions(self):
@@ -49,12 +59,21 @@ class InventarioViewSet(viewsets.ModelViewSet):
             permission_classes = [IsAdminOCajero]  # Solo admin y cajero pueden hacer otras acciones
         return [permission() for permission in permission_classes]
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        is_low_stock = request.query_params.get("is_low_stock")
+        if is_low_stock is not None:
+            if is_low_stock.lower() in ["true", "1", "yes"]:
+                queryset = queryset.filter(cantidad__lte=F("alerta"))
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
     @action(detail=True, methods=["post"])
     def adjust_stock(self, request, pk=None):
+        print(f"Datos recibidos: {request.data}")
         inventario = self.get_object()
         cantidad = request.data.get("cantidad")
         tipo = request.data.get("tipo_transaccion", "ajuste")
-        comentario = request.data.get("comentario", "")
 
         if cantidad is None:
             return Response({"error": "La cantidad es obligatoria"}, status=status.HTTP_400_BAD_REQUEST)
@@ -68,12 +87,11 @@ class InventarioViewSet(viewsets.ModelViewSet):
             with transaction.atomic():
                 # Crear la transacción
                 transaccion = TransaccionInventario.objects.create(
-                    id_producto=inventario.producto,
-                    id_sucursal=inventario.sucursal,
+                    id_producto=inventario.id_producto,
+                    id_sucursal=inventario.id_sucursal,
                     cantidad=cantidad,
                     tipo_transaccion=tipo,
                     id_usuario=request.user,
-                    comentario=comentario,
                 )
 
                 # Actualizar el inventario

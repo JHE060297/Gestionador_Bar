@@ -31,6 +31,7 @@ export class MainLayoutComponent implements OnInit {
         { name: 'Mesas', route: '/tables', icon: 'table_restaurant', roles: ['administrador', 'cajero', 'mesero'] },
         { name: 'Pedidos', route: '/orders', icon: 'receipt_long', roles: ['administrador', 'cajero', 'mesero'] },
         { name: 'Inventario', route: '/inventory', icon: 'inventory', roles: ['administrador', 'cajero', 'mesero'] },
+        { name: 'Productos', route: '/products', icon: 'shopping_basket', roles: ['administrador', 'cajero'] },
         { name: 'Pagos', route: '/payments', icon: 'payments', roles: ['administrador', 'cajero'] },
         { name: 'Reportes', route: '/reports', icon: 'assessment', roles: ['administrador', 'cajero'] },
         { name: 'Usuarios', route: '/users', icon: 'people', roles: ['administrador'] },

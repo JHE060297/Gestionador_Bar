@@ -23,6 +23,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 // Components
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
@@ -47,7 +48,8 @@ const materialModules = [
   MatSortModule,
   MatTableModule,
   MatToolbarModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatDatepickerModule
 ];
 
 const components = [
